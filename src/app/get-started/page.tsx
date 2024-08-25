@@ -33,7 +33,7 @@ export default function GetStarted() {
     const [otp, setOtp] = useState('')
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-    const [otpSent, setOtpSent] = useState(false)
+    const [otpSent, setOtpSent] = useState(true)
     const router = useRouter()
 
     const validateForm = () => {
@@ -57,6 +57,7 @@ export default function GetStarted() {
             setOtp('') // Reset OTP when sending a new one
             // In a real app, you would call an API to send the OTP
             console.log('OTP sent to', countryCode + phoneNumber)
+            console.log("OTP 123456")
         }
     }
 
@@ -93,7 +94,7 @@ export default function GetStarted() {
                 </Link>
             </header>
             <main className="flex-grow flex items-center justify-center px-4">
-                <Card className="w-full max-w-md">
+                <Card className="w-full max-w-fit">
                     <CardHeader>
                         <CardTitle className="flex items-center justify-center text-2xl font-bold">
                             <MessageSquareIcon className="h-6 w-6 mr-2 text-green-500" />
@@ -184,7 +185,7 @@ export default function GetStarted() {
                                 {otpSent ? 'Resend OTP' : 'Send OTP'}
                             </Button>
                             {otpSent && (
-                                <div className={"flex gap-8 items-center flex-row"}>
+                                <div className={"flex gap-6 items-center flex-row"}>
                                     <Label htmlFor="otp">Enter OTP</Label>
                                     <InputOTP
                                         value={otp}
@@ -218,6 +219,13 @@ export default function GetStarted() {
                                             />
                                         </InputOTPGroup>
                                     </InputOTP>
+                                    <Button
+                                        type="button"
+                                        onClick={handleSendOtp}
+                                        className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                    >
+                                        verify OTP
+                                    </Button>
                                     {errors.otp && <p className="text-red-500 text-sm mt-1">{errors.otp}</p>}
                                 </div>
                             )}
