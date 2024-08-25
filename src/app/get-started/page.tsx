@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation'
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
 
@@ -33,7 +32,8 @@ export default function GetStarted() {
     const [otp, setOtp] = useState('')
     const [errors, setErrors] = useState<{ [key: string]: string }>({})
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-    const [otpSent, setOtpSent] = useState(true)
+    const [otpSent, setOtpSent] = useState(false)
+    const [otpVerified, setOtpVerified] = useState(false)
     const router = useRouter()
 
     const validateForm = () => {
@@ -55,21 +55,35 @@ export default function GetStarted() {
             // Simulating OTP send
             setOtpSent(true)
             setOtp('') // Reset OTP when sending a new one
+            setOtpVerified(false) // Reset verification status
             // In a real app, you would call an API to send the OTP
             console.log('OTP sent to', countryCode + phoneNumber)
             console.log("OTP 123456")
         }
     }
 
+    const handleVerifyOtp = async () => {
+        if (otp.length !== 6) {
+            setErrors({ ...errors, otp: 'OTP must be 6 digits' })
+            return
+        }
+
+        // Simulating OTP verification
+        // In a real app, you would call an API to verify the OTP
+        if (otp === '123456') {
+            setOtpVerified(true)
+            setErrors({ ...errors, otp: '' })
+        } else {
+            setOtpVerified(false)
+            setErrors({ ...errors, otp: 'Invalid OTP' })
+        }
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!validateForm()) return
-        if (!otpSent) {
-            setErrors({ ...errors, otp: 'Please send and verify OTP first' })
-            return
-        }
-        if (otp.length !== 6) {
-            setErrors({ ...errors, otp: 'OTP must be 6 digits' })
+        if (!otpSent || !otpVerified) {
+            setErrors({ ...errors, otp: 'Please verify OTP first' })
             return
         }
 
@@ -185,54 +199,41 @@ export default function GetStarted() {
                                 {otpSent ? 'Resend OTP' : 'Send OTP'}
                             </Button>
                             {otpSent && (
-                                <div className={"flex gap-6 items-center flex-row"}>
-                                    <Label htmlFor="otp">Enter OTP</Label>
-                                    <InputOTP
-                                        value={otp}
-                                        onChange={setOtp}
-                                        maxLength={6}
-                                    >
-                                        <InputOTPGroup className={" flex justify-center"}>
-                                            <InputOTPSlot
-                                                index={0}
-                                                className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                            <InputOTPSlot
-                                                index={1}
-                                                className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                            <InputOTPSlot
-                                                index={2}
-                                                className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                            <InputOTPSlot
-                                                index={3}
-                                                className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                            <InputOTPSlot
-                                                index={4}
-                                                className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                            <InputOTPSlot
-                                                index={5}
-                                                className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                            />
-                                        </InputOTPGroup>
-                                    </InputOTP>
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex gap-6 items-center">
+                                        <Label htmlFor="otp">Enter OTP</Label>
+                                        <InputOTP
+                                            value={otp}
+                                            onChange={setOtp}
+                                            maxLength={6}
+                                        >
+                                            <InputOTPGroup className="flex justify-center">
+                                                {[...Array(6)].map((_, index) => (
+                                                    <InputOTPSlot
+                                                        key={index}
+                                                        index={index}
+                                                        className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200"
+                                                    />
+                                                ))}
+                                            </InputOTPGroup>
+                                        </InputOTP>
+                                    </div>
                                     <Button
                                         type="button"
-                                        onClick={handleSendOtp}
+                                        onClick={handleVerifyOtp}
                                         className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                        disabled={otp.length !== 6}
                                     >
-                                        verify OTP
+                                        Verify OTP
                                     </Button>
                                     {errors.otp && <p className="text-red-500 text-sm mt-1">{errors.otp}</p>}
+                                    {otpVerified && <p className="text-green-500 text-sm mt-1">OTP verified successfully!</p>}
                                 </div>
                             )}
                             <Button
                                 type="submit"
                                 className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
-                                disabled={submitStatus === 'loading' || !otpSent || otp.length !== 6}
+                                disabled={submitStatus === 'loading' || !otpSent || !otpVerified}
                             >
                                 {submitStatus === 'loading' ? 'Creating Account...' : 'Create Account'}
                             </Button>
