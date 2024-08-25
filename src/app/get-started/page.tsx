@@ -117,7 +117,7 @@ export default function GetStarted() {
                         )}
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <Label htmlFor="name">Full Name</Label>
+                                <Label htmlFor="name">User Name</Label>
                                 <Input
                                     id="name"
                                     value={name}
