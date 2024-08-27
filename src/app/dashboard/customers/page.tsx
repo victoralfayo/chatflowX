@@ -3,14 +3,27 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { PlusIcon, Search, Filter, MoreVertical, Trash2, Edit2, UserPlus, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+    PlusIcon,
+    Search,
+    Filter,
+    MoreVertical,
+    Trash2,
+    Edit2,
+    UserPlus,
+    ChevronLeft,
+    ChevronRight,
+    TrashIcon
+} from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {ButtonSubmit} from "@/components/customButtons";
+import {TableFooterInfo} from "@/components/customComponents";
 
 // Mock data for customers
 const initialCustomers = [
@@ -74,20 +87,22 @@ export default function CustomersDashboard() {
 
     return (
         <div className="container mx-auto p-4 space-y-8">
-            <Card>
+            <Card
+                className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+            >
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Customers</CardTitle>
+                    <CardTitle className={"text-jade-950"}>Customers</CardTitle>
                     <div className="flex space-x-2">
                         <Dialog open={isAddCustomerOpen} onOpenChange={setIsAddCustomerOpen}>
                             <DialogTrigger asChild>
-                                <Button>
+                                <ButtonSubmit>
                                     <PlusIcon className="mr-2 h-4 w-4" />
                                     Add Customer
-                                </Button>
+                                </ButtonSubmit>
                             </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>Add New Customer</DialogTitle>
+                                    <DialogTitle className={"text-jade-950"}>Add New Customer</DialogTitle>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
                                     <Input
@@ -119,19 +134,19 @@ export default function CustomersDashboard() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <Button onClick={handleAddCustomer}>Add Customer</Button>
+                                <ButtonSubmit onClick={handleAddCustomer}>Add Customer</ButtonSubmit>
                             </DialogContent>
                         </Dialog>
                         <Dialog open={isAddGroupOpen} onOpenChange={setIsAddGroupOpen}>
                             <DialogTrigger asChild>
-                                <Button variant="outline">
+                                <ButtonSubmit variant="outline">
                                     <PlusIcon className="mr-2 h-4 w-4" />
                                     Add Group
-                                </Button>
-                            </DialogTrigger>
+                                </ButtonSubmit>
+                            </DialogTrigger>x
                             <DialogContent>
                                 <DialogHeader>
-                                    <DialogTitle>Add New Group</DialogTitle>
+                                    <DialogTitle className={"text-jade-950"}>Add New Group</DialogTitle>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
                                     <Input
@@ -140,12 +155,12 @@ export default function CustomersDashboard() {
                                         onChange={(e) => setNewGroup(e.target.value)}
                                     />
                                 </div>
-                                <Button onClick={handleAddGroup}>Add Group</Button>
+                                <ButtonSubmit onClick={handleAddGroup}>Add Group</ButtonSubmit>
                             </DialogContent>
                         </Dialog>
                         {selectedCustomers.length > 0 && (
-                            <Button variant="destructive" onClick={handleBulkDelete}>
-                                <Trash2 className="mr-2 h-4 w-4" />
+                            <Button variant="destructive" className={"bg-jade-950 hover:bg-jade-800 transition-all duration-200"} onClick={handleBulkDelete}>
+                                <TrashIcon className="mr-2 h-4 w-4" />
                                 Delete Selected
                             </Button>
                         )}
@@ -221,7 +236,10 @@ export default function CustomersDashboard() {
                                     <TableCell>{customer.email}</TableCell>
                                     <TableCell>{customer.phone}</TableCell>
                                     <TableCell>
-                                        <Badge variant={customer.group === 'VIP' ? 'default' : 'secondary'}>
+                                        <Badge
+                                            variant={customer.group === 'VIP' ? 'default' : 'secondary'}
+                                            className={`${customer.group === 'VIP'? "text-jade-950 bg-energy-yellow-300 hover:bg-jade-600 hover:text-jade-950": ""}`}
+                                        >
                                             {customer.group}
                                         </Badge>
                                     </TableCell>
@@ -260,28 +278,24 @@ export default function CustomersDashboard() {
                         </TableBody>
                     </Table>
                     <div className="flex items-center justify-between space-x-2 py-4">
-                        <div className="text-sm text-muted-foreground">
+                        <TableFooterInfo >
                             Showing {indexOfFirstCustomer + 1} to {Math.min(indexOfLastCustomer, filteredCustomers.length)} of {filteredCustomers.length} entries
-                        </div>
-                        <div className="space-x-2">
-                            <Button
-                                variant="outline"
-                                size="sm"
+                        </TableFooterInfo>
+                        <div className="space-x-2 flex flex-row items-center justify-between">
+                            <ButtonSubmit
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
                             >
                                 <ChevronLeft className="h-4 w-4" />
                                 Previous
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
+                            </ButtonSubmit>
+                            <ButtonSubmit
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
                             >
                                 Next
                                 <ChevronRight className="h-4 w-4" />
-                            </Button>
+                            </ButtonSubmit>
                         </div>
                     </div>
                 </CardContent>

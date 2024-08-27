@@ -13,7 +13,8 @@ import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { PlusIcon, Search, Edit, Trash2, UserPlus, Settings, BarChart, Phone } from 'lucide-react'
+import {PlusIcon, Search, Edit, Trash2, UserPlus, Settings, BarChart, Phone, TrashIcon, PencilIcon} from 'lucide-react'
+import {ButtonIconDelete, ButtonIconEdit, ButtonSubmit} from "@/components/customButtons";
 
 // Mock data for WhatsApp integrations
 const initialWhatsAppIntegrations = [
@@ -194,7 +195,7 @@ export default function IntegrationsManagement() {
     }
 
     return (
-        <div className="p-8">
+        <div className="container mx-auto p-8">
             <Tabs defaultValue="whatsapp">
                 <TabsList>
                     <TabsTrigger value="whatsapp">WhatsApp Integrations</TabsTrigger>
@@ -203,15 +204,17 @@ export default function IntegrationsManagement() {
                     <TabsTrigger value="testing-numbers">Testing Numbers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="whatsapp">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>WhatsApp Integrations</CardTitle>
+                            <CardTitle className={"text-jade-950"}>WhatsApp Integrations</CardTitle>
                             <Dialog open={isCreateWhatsAppIntegrationOpen} onOpenChange={setIsCreateWhatsAppIntegrationOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Add WhatsApp Integration
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
@@ -281,18 +284,21 @@ export default function IntegrationsManagement() {
                                                 <TableCell>{integration.name}</TableCell>
                                                 <TableCell>{integration.phoneNumberId}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant={integration.status === 'Active' ? 'default' : 'secondary'}>
+                                                    <Badge
+                                                        variant={integration.status === 'Active' ? 'default' : 'secondary'}
+                                                        className={`${integration.status === 'Active'? "text-jade-950 bg-jade-500 hover:bg-jade-600 hover:text-jade-950": ""}`}
+                                                    >
                                                         {integration.status}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-2">
-                                                        <Button variant="ghost" size="icon" onClick={() => setEditingWhatsAppIntegration(integration)}>
-                                                            <Edit className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteWhatsAppIntegration(integration.id)}>
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <ButtonIconEdit  onClick={() => setEditingWhatsAppIntegration(integration)}>
+                                                            <PencilIcon className="h-4 w-4" />
+                                                        </ButtonIconEdit>
+                                                        <ButtonIconDelete onClick={() => handleDeleteWhatsAppIntegration(integration.id)}>
+                                                            <TrashIcon className="h-4 w-4" />
+                                                        </ButtonIconDelete>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -304,23 +310,25 @@ export default function IntegrationsManagement() {
                     </Card>
                 </TabsContent>
                 <TabsContent value="other">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Other Integrations</CardTitle>
+                            <CardTitle className={"text-jade-950"}>Other Integrations</CardTitle>
                             <Dialog open={isCreateOtherIntegrationOpen} onOpenChange={setIsCreateOtherIntegrationOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Add Integration
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Add New Integration</DialogTitle>
+                                        <DialogTitle className={"text-jade-950"}>Add New Integration</DialogTitle>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="name" className="text-right">Name:</Label>
+                                            <Label htmlFor="name" className="text-right text-jade-950">Name:</Label>
                                             <Input
                                                 id="name"
                                                 placeholder="Integration Name"
@@ -330,7 +338,7 @@ export default function IntegrationsManagement() {
                                             />
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="type" className="text-right">Type:</Label>
+                                            <Label htmlFor="type" className="text-right text-jade-950">Type:</Label>
                                             <Select
                                                 value={newOtherIntegration.type}
                                                 onValueChange={(value) => setNewOtherIntegration({ ...newOtherIntegration, type: value })}
@@ -348,7 +356,7 @@ export default function IntegrationsManagement() {
                                             </Select>
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="apiKey" className="text-right">API Key:</Label>
+                                            <Label htmlFor="apiKey" className="text-right text-jade-950">API Key:</Label>
                                             <Input
                                                 id="apiKey"
                                                 placeholder="API Key"
@@ -358,7 +366,7 @@ export default function IntegrationsManagement() {
                                             />
                                         </div>
                                     </div>
-                                    <Button onClick={handleCreateOtherIntegration}>Add Integration</Button>
+                                    <ButtonSubmit onClick={handleCreateOtherIntegration}>Add Integration</ButtonSubmit>
                                 </DialogContent>
                             </Dialog>
                         </CardHeader>
@@ -390,18 +398,20 @@ export default function IntegrationsManagement() {
                                                 <TableCell>{integration.name}</TableCell>
                                                 <TableCell>{integration.type}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant={integration.status === 'Active' ? 'default' : 'secondary'}>
+                                                    <Badge variant={integration.status === 'Active' ? 'default' : 'secondary'}
+                                                           className={`${integration.status === 'Active'? "text-jade-950 bg-jade-500 hover:bg-jade-600 hover:text-jade-950": ""}`}
+                                                    >
                                                         {integration.status}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-2">
-                                                        <Button variant="ghost" size="icon" onClick={() => setEditingOtherIntegration(integration)}>
-                                                            <Edit className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteOtherIntegration(integration.id)}>
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <ButtonIconEdit  onClick={() => setEditingOtherIntegration(integration)}>
+                                                            <PencilIcon className="h-4 w-4" />
+                                                        </ButtonIconEdit>
+                                                        <ButtonIconDelete  onClick={() => handleDeleteOtherIntegration(integration.id)}>
+                                                            <TrashIcon className="h-4 w-4" />
+                                                        </ButtonIconDelete>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -413,19 +423,21 @@ export default function IntegrationsManagement() {
                     </Card>
                 </TabsContent>
                 <TabsContent value="testing-groups">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Testing Groups</CardTitle>
+                            <CardTitle className={"text-jade-950"}>Testing Groups</CardTitle>
                             <Dialog open={isCreateTestingGroupOpen} onOpenChange={setIsCreateTestingGroupOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Create Testing Group
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Create New Testing Group</DialogTitle>
+                                        <DialogTitle className={"text-jade-950"}>Create New Testing Group</DialogTitle>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
                                         <div className="grid grid-cols-4 items-center gap-4">
@@ -439,7 +451,7 @@ export default function IntegrationsManagement() {
                                             />
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="whatsAppIds" className="text-right">WhatsApp IDs:</Label>
+                                            <Label htmlFor="whatsAppIds" className="text-right text-jade-950">WhatsApp IDs:</Label>
                                             <Select
                                                 value={newTestingGroup.whatsAppIds.map(String)}
                                                 onValueChange={(values) => setNewTestingGroup({ ...newTestingGroup, whatsAppIds: values.map(Number) })}
@@ -458,7 +470,7 @@ export default function IntegrationsManagement() {
                                             </Select>
                                         </div>
                                     </div>
-                                    <Button onClick={handleCreateTestingGroup}>Create Testing Group</Button>
+                                    <ButtonSubmit onClick={handleCreateTestingGroup}>Create Testing Group</ButtonSubmit>
                                 </DialogContent>
                             </Dialog>
                         </CardHeader>
@@ -483,12 +495,12 @@ export default function IntegrationsManagement() {
                                                 </TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-2">
-                                                        <Button variant="ghost" size="icon" onClick={() => setEditingTestingGroup(group)}>
-                                                            <Edit className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteTestingGroup(group.id)}>
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <ButtonIconEdit  onClick={() => setEditingTestingGroup(group)}>
+                                                            <PencilIcon className="h-4 w-4" />
+                                                        </ButtonIconEdit>
+                                                        <ButtonIconDelete onClick={() => handleDeleteTestingGroup(group.id)}>
+                                                            <TrashIcon className="h-4 w-4" />
+                                                        </ButtonIconDelete>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -500,23 +512,25 @@ export default function IntegrationsManagement() {
                     </Card>
                 </TabsContent>
                 <TabsContent value="testing-numbers">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Testing Numbers</CardTitle>
+                            <CardTitle className={"text-jade-950"}>Testing Numbers</CardTitle>
                             <Dialog open={isCreateTestingNumberOpen} onOpenChange={setIsCreateTestingNumberOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Add Testing Number
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
-                                        <DialogTitle>Add New Testing Number</DialogTitle>
+                                        <DialogTitle className={"text-jade-950"}>Add New Testing Number</DialogTitle>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="number" className="text-right">Number:</Label>
+                                            <Label htmlFor="number" className="text-right text-jade-950">Number:</Label>
                                             <Input
                                                 id="number"
                                                 placeholder="Phone Number"
@@ -554,7 +568,7 @@ export default function IntegrationsManagement() {
                                             </Select>
                                         </div>
                                     </div>
-                                    <Button onClick={handleCreateTestingNumber}>Add Testing Number</Button>
+                                    <ButtonSubmit onClick={handleCreateTestingNumber}>Add Testing Number</ButtonSubmit>
                                 </DialogContent>
                             </Dialog>
                         </CardHeader>
@@ -577,12 +591,12 @@ export default function IntegrationsManagement() {
                                                 <TableCell>{number.group}</TableCell>
                                                 <TableCell>
                                                     <div className="flex space-x-2">
-                                                        <Button variant="ghost" size="icon" onClick={() => setEditingTestingNumber(number)}>
-                                                            <Edit className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteTestingNumber(number.id)}>
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
+                                                        <ButtonIconEdit onClick={() => setEditingTestingNumber(number)}>
+                                                            <PencilIcon className="h-4 w-4" />
+                                                        </ButtonIconEdit>
+                                                        <ButtonIconDelete onClick={() => handleDeleteTestingNumber(number.id)}>
+                                                            <TrashIcon className="h-4 w-4" />
+                                                        </ButtonIconDelete>
                                                     </div>
                                                 </TableCell>
                                             </TableRow>
@@ -599,7 +613,7 @@ export default function IntegrationsManagement() {
             <Dialog open={!!editingWhatsAppIntegration} onOpenChange={() => setEditingWhatsAppIntegration(null)}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Edit WhatsApp Integration</DialogTitle>
+                        <DialogTitle className={"text-jade-950"}>Edit WhatsApp Integration</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">

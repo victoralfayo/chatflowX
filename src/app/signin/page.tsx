@@ -7,13 +7,12 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MessageSquareIcon, ArrowLeftIcon } from 'lucide-react'
+import { MessageSquareIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
     InputOTP,
     InputOTPGroup,
-    InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
 
@@ -27,6 +26,7 @@ const countryCodes = [
 export default function SignIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [countryCode, setCountryCode] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [otp, setOtp] = useState('')
@@ -86,6 +86,10 @@ export default function SignIn() {
         } catch (error) {
             setSubmitStatus('error')
         }
+    }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
     }
 
     return (
@@ -152,13 +156,27 @@ export default function SignIn() {
                                     </div>
                                     <div>
                                         <Label htmlFor="password">Password</Label>
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                            className={errors.password ? 'border-red-500' : ''}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={togglePasswordVisibility}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOffIcon className="h-5 w-5" />
+                                                ) : (
+                                                    <EyeIcon className="h-5 w-5" />
+                                                )}
+                                            </button>
+                                        </div>
                                         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                                     </div>
                                 </>
@@ -200,38 +218,21 @@ export default function SignIn() {
                                         {otpSent ? 'Resend OTP' : 'Send OTP'}
                                     </Button>
                                     {otpSent && (
-                                        <div className={"flex gap-8 items-center flex-row"}>
+                                        <div className="flex gap-8 items-center flex-row">
                                             <Label htmlFor="otp">Enter OTP</Label>
                                             <InputOTP
                                                 value={otp}
                                                 onChange={setOtp}
                                                 maxLength={6}
                                             >
-                                                <InputOTPGroup className={" flex justify-center"}>
-                                                    <InputOTPSlot
-                                                        index={0}
-                                                        className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
-                                                    <InputOTPSlot
-                                                        index={1}
-                                                        className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
-                                                    <InputOTPSlot
-                                                        index={2}
-                                                        className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
-                                                    <InputOTPSlot
-                                                        index={3}
-                                                        className={`w-10 h-12 text-center text-lg  transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
-                                                    <InputOTPSlot
-                                                        index={4}
-                                                        className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
-                                                    <InputOTPSlot
-                                                        index={5}
-                                                        className={`w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200 `}
-                                                    />
+                                                <InputOTPGroup className="flex justify-center">
+                                                    {[...Array(6)].map((_, index) => (
+                                                        <InputOTPSlot
+                                                            key={index}
+                                                            index={index}
+                                                            className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200"
+                                                        />
+                                                    ))}
                                                 </InputOTPGroup>
                                             </InputOTP>
                                             {errors.otp && <p className="text-red-500 text-sm mt-1">{errors.otp}</p>}

@@ -8,6 +8,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
 import {PencilIcon, PlusIcon, TrashIcon} from 'lucide-react'
 import {ButtonIconDelete, ButtonIconEdit, ButtonSubmit} from "@/components/customButtons";
+import {TableFooterInfo} from "@/components/customComponents";
 
 // Simulated data for organizations, agents, and admins
 const organizationsData = [
@@ -57,12 +58,6 @@ const adminsData = [
     { id: 2, orgId: 2, name: 'John Matrix', email: 'john@globaltech.com', role: 'Admin', phone: "+44 20 7111 2222" },
     { id: 3, orgId: 3, name: 'Dutch Schaefer', email: 'dutch@edulearn.com', role: 'Admin', phone: "+1 (416) 111-2222" },
 ]
-
-function TableFooter({children}: {children: React.ReactNode}) {
-    return <div className={"text-jade-600 text-sm"}>
-        {children}
-    </div>;
-}
 
 export default function Component() {
     const [selectedOrg, setSelectedOrg] = useState(organizationsData[0])
@@ -299,9 +294,9 @@ export default function Component() {
                             </TableBody>
                         </Table>
                         <div className="flex justify-between items-center">
-                            <TableFooter >
+                            <TableFooterInfo >
                                 Showing {startIndex + 1} to {Math.min(endIndex, filteredAgents.length)} of {filteredAgents.length} agents
-                            </TableFooter>
+                            </TableFooterInfo>
                             <div className="space-x-2">
                                 <ButtonSubmit
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}

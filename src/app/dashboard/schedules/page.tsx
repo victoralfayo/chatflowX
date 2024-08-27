@@ -17,6 +17,7 @@ import { PlusIcon, Search, Clock, Users, Send, BarChart, Target, PhoneCall, Zap,
 import { format } from 'date-fns'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import {Label} from "@/components/ui/label";
+import {ButtonSubmit} from "@/components/customButtons";
 
 // Mock data for campaigns
 const initialCampaigns = [
@@ -180,11 +181,11 @@ export default function BroadcastingDashboard() {
         <Dialog open={isEditScheduleOpen} onOpenChange={setIsEditScheduleOpen}>
             <DialogContent className="max-w-3xl w-full h-[90vh]max-w-[80vw]">
                 <DialogHeader>
-                    <DialogTitle>Edit Campaign: {selectedCampaign?.name}</DialogTitle>
+                    <DialogTitle className={"text-jade-950"}>Edit Campaign: {selectedCampaign?.name}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="edit-name" className="text-right">Name:</Label>
+                        <Label htmlFor="edit-name" className="text-right text-jade-950">Name:</Label>
                         <Input
                             id="edit-name"
                             value={selectedCampaign?.name}
@@ -193,7 +194,7 @@ export default function BroadcastingDashboard() {
                         />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="edit-template" className="text-right">Template:</Label>
+                        <Label htmlFor="edit-template" className="text-right text-jade-950">Template:</Label>
                         <Select
                             value={selectedCampaign?.templateId.toString()}
                             onValueChange={(value) => setSelectedCampaign({ ...selectedCampaign, templateId: parseInt(value) })}
@@ -211,7 +212,7 @@ export default function BroadcastingDashboard() {
                         </Select>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="edit-audience" className="text-right">Audience:</Label>
+                        <Label htmlFor="edit-audience" className="text-right text-jade-950">Audience:</Label>
                         <Select
                             value={selectedCampaign?.audience}
                             onValueChange={(value) => setSelectedCampaign({ ...selectedCampaign, audience: value })}
@@ -229,7 +230,7 @@ export default function BroadcastingDashboard() {
                         </Select>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">Schedule:</Label>
+                        <Label className="text-right text-jade-950">Schedule:</Label>
                         <div className="col-span-3 flex gap-4">
                             <Calendar
                                 mode="single"
@@ -255,7 +256,7 @@ export default function BroadcastingDashboard() {
                         </div>
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="edit-testingGroup" className="text-right">Testing Group:</Label>
+                        <Label htmlFor="edit-testingGroup" className="text-right text-jade-950">Testing Group:</Label>
                         <Select
                             value={selectedCampaign?.testingGroup}
                             onValueChange={(value) => setSelectedCampaign({ ...selectedCampaign, testingGroup: value })}
@@ -273,13 +274,13 @@ export default function BroadcastingDashboard() {
                         </Select>
                     </div>
                 </div>
-                <Button onClick={handleEditSchedule}>Save Changes</Button>
+                <ButtonSubmit onClick={handleEditSchedule}>Save Changes</ButtonSubmit>
             </DialogContent>
         </Dialog>
     )
 
     return (
-        <div className="p-8">
+        <div className="p-8 container" >
             <Tabs defaultValue="campaigns">
                 <TabsList>
                     <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
@@ -287,15 +288,17 @@ export default function BroadcastingDashboard() {
                     {isAdmin && <TabsTrigger value="approval">Approval Queue</TabsTrigger>}
                 </TabsList>
                 <TabsContent value="campaigns">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Broadcast Campaigns</CardTitle>
+                            <CardTitle className={"text-jade-950"}>Broadcast Campaigns</CardTitle>
                             <Dialog open={isCreateCampaignOpen} onOpenChange={setIsCreateCampaignOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Create Campaign
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-3xl">
                                     <DialogHeader>
@@ -303,7 +306,7 @@ export default function BroadcastingDashboard() {
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="name" className="text-right">Name:</Label>
+                                            <Label htmlFor="name" className="text-right text-jade-950">Name:</Label>
                                             <Input
                                                 id="name"
                                                 placeholder="Campaign Name"
@@ -313,7 +316,7 @@ export default function BroadcastingDashboard() {
                                             />
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="template" className="text-right">Template:</Label>
+                                            <Label htmlFor="template" className="text-right text-jade-950">Template:</Label>
                                             <Select
                                                 value={newCampaign.templateId}
                                                 onValueChange={(value) => setNewCampaign({ ...newCampaign, templateId: value })}
@@ -331,7 +334,7 @@ export default function BroadcastingDashboard() {
                                             </Select>
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="audience" className="text-right">Audience:</Label>
+                                            <Label htmlFor="audience" className="text-right text-jade-950">Audience:</Label>
                                             <Select
                                                 value={newCampaign.audience}
                                                 onValueChange={(value) => setNewCampaign({ ...newCampaign, audience: value })}
@@ -349,7 +352,7 @@ export default function BroadcastingDashboard() {
                                             </Select>
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label className="text-right">Schedule:</Label>
+                                            <Label className="text-right text-jade-950">Schedule:</Label>
                                             <div className="col-span-3 flex gap-4">
                                                 <Calendar
                                                     mode="single"
@@ -375,7 +378,7 @@ export default function BroadcastingDashboard() {
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="automated" className="text-right">Automated:</Label>
+                                            <Label htmlFor="automated" className="text-right text-jade-950">Automated:</Label>
                                             <Checkbox
                                                 id="automated"
                                                 checked={newCampaign.isAutomated}
@@ -384,7 +387,7 @@ export default function BroadcastingDashboard() {
                                         </div>
                                         {newCampaign.isAutomated && (
                                             <div className="grid grid-cols-4 items-center gap-4">
-                                                <Label htmlFor="trigger" className="text-right">Trigger:</Label>
+                                                <Label htmlFor="trigger" className="text-right text-jade-950">Trigger:</Label>
                                                 <Input
                                                     id="trigger"
                                                     placeholder="e.g., New customer sign-up"
@@ -395,7 +398,7 @@ export default function BroadcastingDashboard() {
                                             </div>
                                         )}
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="testingGroup" className="text-right">Testing Group:</Label>
+                                            <Label htmlFor="testingGroup" className="text-right text-jade-950">Testing Group:</Label>
                                             <Select
                                                 value={newCampaign.testingGroup}
                                                 onValueChange={(value) => setNewCampaign({ ...newCampaign, testingGroup: value, testNumber: '' })}
@@ -413,7 +416,7 @@ export default function BroadcastingDashboard() {
                                             </Select>
                                         </div>
                                         <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="testNumber" className="text-right">Test Number:</Label>
+                                            <Label htmlFor="testNumber" className="text-right text-jade-950">Test Number:</Label>
                                             <Input
                                                 id="testNumber"
                                                 placeholder="Enter phone number for testing"
@@ -421,12 +424,12 @@ export default function BroadcastingDashboard() {
                                                 value={newCampaign.testNumber}
                                                 onChange={(e) => setNewCampaign({ ...newCampaign, testNumber: e.target.value, testingGroup: '' })}
                                             />
-                                            <Button onClick={handleTestCampaign}>Test</Button>
+                                            <ButtonSubmit variant={"outline"} onClick={handleTestCampaign}>Test</ButtonSubmit>
                                         </div>
                                     </div>
-                                    <Button onClick={handleCreateCampaign} disabled={!newCampaign.tested}>
+                                    <ButtonSubmit onClick={handleCreateCampaign} disabled={!newCampaign.tested}>
                                         {newCampaign.tested ? 'Submit for Approval' : 'Test Required'}
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogContent>
                             </Dialog>
                         </CardHeader>
@@ -463,7 +466,9 @@ export default function BroadcastingDashboard() {
                                             <TableRow key={campaign.id}>
                                                 <TableCell>{campaign.name}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant={campaign.status === 'Approved' ? 'default' : campaign.status === 'Pending Approval' ? 'secondary' : 'destructive'}>
+                                                    <Badge variant={campaign.status === 'Approved' ? 'default' : campaign.status === 'Pending Approval' ? 'secondary' : 'destructive'}
+                                                           className={`${campaign.status === 'Approved' ? "text-jade-950 bg-jade-500 hover:bg-jade-600 hover:text-jade-950": ""}`}
+                                                    >
                                                         {campaign.status}
                                                     </Badge>
                                                 </TableCell>
@@ -555,9 +560,11 @@ export default function BroadcastingDashboard() {
                 </TabsContent>
                 {isAdmin && (
                     <TabsContent value="approval">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Campaigns Pending Approval</CardTitle>
+                        <Card
+                            className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                        >
+                            <CardHeader >
+                                <CardTitle className={"text-jade-950"}>Campaigns Pending Approval</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ScrollArea className="h-[calc(100vh-16rem)]">
@@ -581,22 +588,22 @@ export default function BroadcastingDashboard() {
                                                     <TableCell>{campaign.testingGroup}</TableCell>
                                                     <TableCell>{campaign.scheduledFor}</TableCell>
                                                     <TableCell>
-                                                        <div className="flex space-x-2">
-                                                            <Button variant="outline" size="sm" onClick={() => handleApproveCampaign(campaign.id)}>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <ButtonSubmit variant="outline"  onClick={() => handleApproveCampaign(campaign.id)}>
                                                                 <CheckCircle className="h-4 w-4 mr-2" />
                                                                 Approve
-                                                            </Button>
-                                                            <Button variant="outline" size="sm" onClick={() => handleRejectCampaign(campaign.id)}>
+                                                            </ButtonSubmit>
+                                                            <ButtonSubmit variant="outline" onClick={() => handleRejectCampaign(campaign.id)}>
                                                                 <XCircle className="h-4 w-4 mr-2" />
                                                                 Reject
-                                                            </Button>
-                                                            <Button variant="ghost" size="sm" onClick={() => {
+                                                            </ButtonSubmit>
+                                                            <ButtonSubmit variant="outline" size="sm" onClick={() => {
                                                                 setSelectedCampaign(campaign)
                                                                 setIsEditScheduleOpen(true)
                                                             }}>
                                                                 <Edit className="h-4 w-4 mr-2" />
                                                                 Edit
-                                                            </Button>
+                                                            </ButtonSubmit>
                                                         </div>
                                                     </TableCell>
                                                 </TableRow>

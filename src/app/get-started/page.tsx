@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MessageSquareIcon, ArrowLeftIcon } from 'lucide-react'
+import { MessageSquareIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -27,6 +27,7 @@ export default function GetStarted() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [countryCode, setCountryCode] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [otp, setOtp] = useState('')
@@ -52,11 +53,9 @@ export default function GetStarted() {
 
     const handleSendOtp = async () => {
         if (validateForm()) {
-            // Simulating OTP send
             setOtpSent(true)
-            setOtp('') // Reset OTP when sending a new one
-            setOtpVerified(false) // Reset verification status
-            // In a real app, you would call an API to send the OTP
+            setOtp('')
+            setOtpVerified(false)
             console.log('OTP sent to', countryCode + phoneNumber)
             console.log("OTP 123456")
         }
@@ -68,8 +67,6 @@ export default function GetStarted() {
             return
         }
 
-        // Simulating OTP verification
-        // In a real app, you would call an API to verify the OTP
         if (otp === '123456') {
             setOtpVerified(true)
             setErrors({ ...errors, otp: '' })
@@ -89,15 +86,17 @@ export default function GetStarted() {
 
         setSubmitStatus('loading')
 
-        // Simulating an API call
         try {
             await new Promise((resolve) => setTimeout(resolve, 1000))
             setSubmitStatus('success')
-            // Redirect to the onboarding greeting page after a short delay
             setTimeout(() => router.push('/onboarding'), 1500)
         } catch (error) {
             setSubmitStatus('error')
         }
+    }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
     }
 
     return (
@@ -154,13 +153,27 @@ export default function GetStarted() {
                             </div>
                             <div>
                                 <Label htmlFor="password">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className={errors.password ? 'border-red-500' : ''}
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className={`${errors.password ? 'border-red-500' : ''} pr-10`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    >
+                                        {showPassword ? (
+                                            <EyeOffIcon className="h-5 w-5" />
+                                        ) : (
+                                            <EyeIcon className="h-5 w-5" />
+                                        )}
+                                    </button>
+                                </div>
                                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
                             <div className="flex space-x-2">

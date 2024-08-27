@@ -13,7 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { PlusIcon, Search, Edit, Trash2, MessageSquare, Phone, Eye } from 'lucide-react'
+import {PlusIcon, Search, Edit, Trash2, MessageSquare, Phone, Eye, EyeIcon, TrashIcon} from 'lucide-react'
+import {ButtonIconDelete, ButtonIconEdit, ButtonSubmit} from "@/components/customButtons";
 
 // Template categories as per WhatsApp guidelines
 const templateCategories = [
@@ -154,7 +155,7 @@ export default function MessageTemplatesDashboard() {
     const TemplateForm = ({ template, isEditing }: { template: typeof newTemplate, isEditing: boolean }) => (
         <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">Name:</Label>
+                <Label htmlFor="name" className="text-right text-jade-950">Name:</Label>
                 <Input
                     id="name"
                     placeholder="Template Name"
@@ -166,7 +167,7 @@ export default function MessageTemplatesDashboard() {
                 />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category" className="text-right">Category:</Label>
+                <Label htmlFor="category" className="text-right text-jade-950">Category:</Label>
                 <Select
                     value={template.category}
                     onValueChange={(value) => isEditing && editingTemplate
@@ -186,7 +187,7 @@ export default function MessageTemplatesDashboard() {
                 </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="language" className="text-right">Language:</Label>
+                <Label htmlFor="language" className="text-right text-jade-950">Language:</Label>
                 <Input
                     id="language"
                     placeholder="Language Code (e.g., en)"
@@ -198,7 +199,7 @@ export default function MessageTemplatesDashboard() {
                 />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="header" className="text-right">Header:</Label>
+                <Label htmlFor="header" className="text-right text-jade-950">Header:</Label>
                 <Input
                     id="header"
                     placeholder="Header Text"
@@ -210,7 +211,7 @@ export default function MessageTemplatesDashboard() {
                 />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="content" className="text-right">Content:</Label>
+                <Label htmlFor="content" className="text-right text-jade-950">Content:</Label>
                 <Textarea
                     id="content"
                     placeholder="Enter your message content. Use {{1}}, {{2}}, etc. for variables."
@@ -222,7 +223,7 @@ export default function MessageTemplatesDashboard() {
                 />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="footer" className="text-right">Footer:</Label>
+                <Label htmlFor="footer" className="text-right text-jade-950">Footer:</Label>
                 <Input
                     id="footer"
                     placeholder="Footer Text"
@@ -234,7 +235,7 @@ export default function MessageTemplatesDashboard() {
                 />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-                <Label className="text-right">Buttons:</Label>
+                <Label className="text-right text-jade-950">Buttons:</Label>
                 <div className="col-span-3 space-y-2">
                     {template.buttons.map((button, index) => (
                         <div key={index} className="flex items-center space-x-2">
@@ -243,16 +244,16 @@ export default function MessageTemplatesDashboard() {
                                 value={button.text}
                                 onChange={(e) => handleUpdateButton(index, e.target.value, isEditing)}
                             />
-                            <Button variant="outline" size="icon" onClick={() => handleRemoveButton(index, isEditing)}>
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <ButtonIconDelete variant="outline" size="icon" onClick={() => handleRemoveButton(index, isEditing)}>
+                                <TrashIcon className="h-4 w-4" />
+                            </ButtonIconDelete>
                         </div>
                     ))}
                     {template.buttons.length < 3 && (
-                        <Button variant="outline" onClick={() => handleAddButton(isEditing)}>
+                        <ButtonSubmit variant="outline" onClick={() => handleAddButton(isEditing)}>
                             <PlusIcon className="mr-2 h-4 w-4" />
                             Add Button
-                        </Button>
+                        </ButtonSubmit>
                     )}
                 </div>
             </div>
@@ -260,16 +261,16 @@ export default function MessageTemplatesDashboard() {
     )
 
     return (
-        <div className="p-8">
-            <Card>
+        <div className="container p-8">
+            <Card className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}>
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>WhatsApp Message Templates</CardTitle>
+                    <CardTitle className={"text-jade-950"}>WhatsApp Message Templates</CardTitle>
                     <Dialog open={isCreateTemplateOpen} onOpenChange={setIsCreateTemplateOpen}>
                         <DialogTrigger asChild>
-                            <Button>
+                            <ButtonSubmit>
                                 <PlusIcon className="mr-2 h-4 w-4" />
                                 Create Template
-                            </Button>
+                            </ButtonSubmit>
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl">
                             <DialogHeader>
@@ -310,21 +311,24 @@ export default function MessageTemplatesDashboard() {
                                         <TableCell>{template.category}</TableCell>
                                         <TableCell>{template.language}</TableCell>
                                         <TableCell>
-                                            <Badge variant={template.status === 'Approved' ? 'default' : 'secondary'}>
+                                            <Badge
+                                                variant={template.status === 'Approved' ? 'default' : 'secondary'}
+                                                className={`${template.status === 'Approved' ? "text-jade-950 bg-jade-500 hover:bg-jade-600 hover:text-jade-950": ""}`}
+                                            >
                                                 {template.status}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex space-x-2">
-                                                <Button variant="ghost" size="icon" onClick={() => {
+                                                <ButtonIconEdit  onClick={() => {
                                                     setEditingTemplate(template)
                                                     setIsEditTemplateOpen(true)
                                                 }}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" onClick={() => handleDeleteTemplate(template.id)}>
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                                    <EyeIcon className="h-4 w-4" />
+                                                </ButtonIconEdit>
+                                                <ButtonIconDelete onClick={() => handleDeleteTemplate(template.id)}>
+                                                    <TrashIcon className="h-4 w-4" />
+                                                </ButtonIconDelete>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -338,14 +342,14 @@ export default function MessageTemplatesDashboard() {
             <Dialog open={isEditTemplateOpen} onOpenChange={setIsEditTemplateOpen}>
                 <DialogContent className="max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle>Edit Message Template</DialogTitle>
+                        <DialogTitle className={"text-jade-950"}>Edit Message Template</DialogTitle>
                     </DialogHeader>
                     {editingTemplate && (
                         <>
                             <TemplateForm template={editingTemplate} isEditing={true} />
                             <div className="flex justify-between">
-                                <Button variant="outline" onClick={() => setIsEditTemplateOpen(false)}>Cancel</Button>
-                                <Button onClick={handleEditTemplate}>Save Changes</Button>
+                                <ButtonSubmit variant="outline" onClick={() => setIsEditTemplateOpen(false)}>Cancel</ButtonSubmit>
+                                <ButtonSubmit onClick={handleEditTemplate}>Save Changes</ButtonSubmit>
                             </div>
                         </>
                     )}

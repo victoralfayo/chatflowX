@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PlusIcon, Search, Filter, MoreVertical, MessageSquare, UserCheck, AlertCircle } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {ButtonSubmit} from "@/components/customButtons";
 
 // Mock data for tickets
 const initialTickets = [
@@ -80,22 +81,24 @@ export default function TicketsDashboard() {
     }
 
     return (
-        <div className="p-8">
+        <div className=" container p-8">
             <Tabs defaultValue="tickets">
                 <TabsList>
                     <TabsTrigger value="tickets">Tickets</TabsTrigger>
                     <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 </TabsList>
                 <TabsContent value="tickets">
-                    <Card>
+                    <Card
+                        className={"active:border-jade-600 focus-within:border-jade-600 hover:border-jade-600 transition-all duration-200"}
+                    >
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Support Tickets</CardTitle>
+                            <CardTitle className={"text-jade-950"}>Support Tickets</CardTitle>
                             <Dialog open={isCreateTicketOpen} onOpenChange={setIsCreateTicketOpen}>
                                 <DialogTrigger asChild>
-                                    <Button>
+                                    <ButtonSubmit>
                                         <PlusIcon className="mr-2 h-4 w-4" />
                                         Create Ticket
-                                    </Button>
+                                    </ButtonSubmit>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogHeader>
