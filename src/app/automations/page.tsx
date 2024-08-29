@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { MenuIcon, XIcon, MessageSquareIcon, BarChartIcon, ZapIcon } from 'lucide-react'
+import { MenuIcon, XIcon, ZapIcon, CogIcon, ClockIcon } from 'lucide-react'
 import Link from 'next/link'
 import {useToast} from "@/components/ui/use-toast";
 
-export default function Home() {
+export default function AutomationsPage() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [menuVisible, setMenuVisible] = useState(false)
     const [name, setName] = useState('')
@@ -64,33 +64,34 @@ export default function Home() {
         <div className="flex flex-col min-h-screen">
             <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="container flex h-16 items-center">
-                    <Link href="/" className="flex items-center justify-center">
-                        <ZapIcon className="h-6 w-6 text-purple-500"/>
-                        <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Chatflow</span>
+                    <Link href="/automations" className="flex items-center justify-center">
+                        <ZapIcon className="h-6 w-6 text-blue-400"/>
+                        <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Chatflow Automations</span>
                     </Link>
                     <nav className="ml-auto hidden md:flex items-center gap-6">
-                        <Link href="/crm" className="text-sm font-medium hover:underline underline-offset-4">
-                            CRM
+                        <Link href="/" className="text-sm font-medium hover:underline underline-offset-4">
+                            Home
                         </Link>
-                        <Link href="/marketing" className="text-sm font-medium hover:underline underline-offset-4">
-                            Marketing
+                        <Link href="/automations/features" className="text-sm font-medium hover:underline underline-offset-4">
+                            Features
                         </Link>
-                        <Link href="/automations" className="text-sm font-medium hover:underline underline-offset-4">
-                            Automations
+                        <Link href="/automations/pricing" className="text-sm font-medium hover:underline underline-offset-4">
+                            Pricing
+                        </Link>
+                        <Link href="/automations/contact" className="text-sm font-medium hover:underline underline-offset-4">
+                            Contact
                         </Link>
                         <Link href="/signin">
                             <Button variant="outline">Sign In</Button>
                         </Link>
                         <Link href="/get-started">
-                            <Button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                            <Button className="bg-gradient-to-r from-blue-400 to-blue-600 text-white">
                                 Get Started
                             </Button>
                         </Link>
                     </nav>
                     <div className="flex items-center gap-2 md:hidden ml-auto">
-                        <Link href="/signin">
-                            <Button variant="outline" size="sm">Sign In</Button>
-                        </Link>
+                        <Button variant="outline" size="sm">Sign In</Button>
                         <Button
                             className="md:hidden"
                             variant="ghost"
@@ -120,36 +121,39 @@ export default function Home() {
                     >
                         <XIcon className="h-6 w-6"/>
                     </Button>
-                    <Link href="/crm" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
-                        CRM
+                    <Link href="/" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
+                        Home
                     </Link>
-                    <Link href="/marketing" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
-                        Marketing
+                    <Link href="/automations/features" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
+                        Features
                     </Link>
-                    <Link href="/automations" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
-                        Automations
+                    <Link href="/automations/pricing" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
+                        Pricing
+                    </Link>
+                    <Link href="/automations/contact" className="py-2 text-lg font-medium hover:underline underline-offset-4" onClick={() => setIsMenuOpen(false)}>
+                        Contact
                     </Link>
                     <Link href="/get-started" onClick={() => setIsMenuOpen(false)}>
-                        <Button className="mt-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                        <Button className="mt-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white">
                             Get Started
                         </Button>
                     </Link>
                 </nav>
             </div>
             <main className="flex-1">
-                <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-purple-500 to-blue-500">
+                <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-blue-400 to-blue-600">
                     <div className="container px-4 md:px-6">
                         <div className="flex flex-col items-center space-y-4 text-center">
                             <div className="space-y-2">
                                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-white">
-                                    Streamline Your Business with Chatflow
+                                    Streamline Your Workflows with Automation
                                 </h1>
                                 <p className="mx-auto max-w-[700px] text-white md:text-xl">
-                                    Integrate CRM, Marketing, and Automations in one powerful platform.
+                                    Chatflow Automations: Boost productivity and efficiency with intelligent workflow automation.
                                 </p>
                             </div>
                             <div className="space-x-4">
-                                <Button className="bg-white text-purple-500 hover:bg-purple-100 font-semibold">Get Started</Button>
+                                <Button className="bg-white text-blue-500 hover:bg-blue-100 font-semibold">Get Started</Button>
                                 <Button variant="outline" className="bg-transparent text-white border-white hover:bg-white/10">
                                     Learn More
                                 </Button>
@@ -159,46 +163,27 @@ export default function Home() {
                 </section>
                 <section className="w-full py-12 md:py-24 lg:py-32">
                     <div className="container px-4 md:px-6">
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">Our Solutions</h2>
+                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">Key Features</h2>
                         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                            <Link href="/crm" className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                                <MessageSquareIcon className="h-12 w-12 text-purple-500"/>
-                                <h3 className="text-xl font-bold">CRM</h3>
-                                <p className="text-muted-foreground">Manage customer relationships effortlessly with our intelligent CRM system.</p>
-                            </Link>
-                            <Link href="/marketing" className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                                <BarChartIcon className="h-12 w-12 text-blue-500"/>
-                                <h3 className="text-xl font-bold">Marketing</h3>
-                                <p className="text-muted-foreground">Boost your marketing efforts with data-driven insights and automation.</p>
-                            </Link>
-                            <Link href="/automations" className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                                <ZapIcon className="h-12 w-12 text-green-500"/>
-                                <h3 className="text-xl font-bold">Automations</h3>
-                                <p className="text-muted-foreground">Streamline your workflows and increase productivity with smart automations.</p>
-                            </Link>
+                            <div className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg">
+                                <ZapIcon className="h-12 w-12 text-blue-500"/>
+                                <h3 className="text-xl font-bold">Workflow Automation</h3>
+                                <p className="text-muted-foreground">Create and manage complex workflows with ease.</p>
+                            </div>
+                            <div className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg">
+                                <CogIcon className="h-12 w-12 text-blue-400"/>
+                                <h3 className="text-xl font-bold">Integration Hub</h3>
+                                <p className="text-muted-foreground">Connect and automate across multiple platforms and tools.</p>
+                            </div>
+                            <div className="flex flex-col items-center text-center space-y-2 p-6 bg-background rounded-lg shadow-lg">
+                                <ClockIcon className="h-12 w-12 text-blue-500"/>
+                                <h3 className="text-xl font-bold">Time-Saving Triggers</h3>
+                                <p className="text-muted-foreground">Set up time-based or event-driven automations.</p>
+                            </div>
                         </div>
                     </div>
                 </section>
                 <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-                    <div className="container px-4 md:px-6">
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-8">Why Choose Chatflow</h2>
-                        <div className="grid gap-10 sm:grid-cols-2 md:gap-16">
-                            <div className="space-y-4">
-                                <h3 className="text-xl font-bold">All-in-One Solution</h3>
-                                <p className="text-muted-foreground">
-                                    Chatflow combines CRM, Marketing, and Automations in a single platform, providing a seamless experience for managing your business operations.
-                                </p>
-                            </div>
-                            <div className="space-y-4">
-                                <h3 className="text-xl font-bold">AI-Powered Insights</h3>
-                                <p className="text-muted-foreground">
-                                    Leverage the power of artificial intelligence to gain valuable insights, predict trends, and make data-driven decisions.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className="w-full py-12 md:py-24 lg:py-32">
                     <div className="container px-4 md:px-6">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-8">Get in Touch</h2>
                         <div className="mx-auto max-w-[600px]">
@@ -224,7 +209,7 @@ export default function Home() {
                                     className={"resize-none"}
                                 />
                                 <Button
-                                    className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold"
+                                    className="w-full bg-gradient-to-r from-blue-400 to-blue-600 text-white font-semibold"
                                     type="submit"
                                     disabled={isSubmitting}
                                 >
@@ -238,8 +223,8 @@ export default function Home() {
             <footer className="w-full py-6 bg-background border-t">
                 <div className="container px-4 md:px-6 flex flex-col md:flex-row justify-between items-center">
                     <div className="flex items-center justify-center mb-4 md:mb-0">
-                        <ZapIcon className="h-6 w-6 text-purple-500"/>
-                        <span className="ml-2 text-xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">Chatflow</span>
+                        <ZapIcon className="h-6 w-6 text-blue-400"/>
+                        <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Chatflow Automations</span>
                     </div>
                     <div className="flex space-x-4">
                         <a href="#" className="text-sm hover:underline underline-offset-4">Privacy Policy</a>

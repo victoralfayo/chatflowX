@@ -1,334 +1,203 @@
 'use client'
 
-import { useState } from 'react'
-import { Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import {
-    ArrowDown,
-    ArrowUp,
-    Users,
-    MessageSquare,
-    BarChart3,
-    DollarSign,
-    MessageCircle,
-    Ticket,
-    Radio
-} from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TabsContent } from "@/components/ui/tabs"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Skeleton } from "@/components/ui/skeleton"
+import { CheckCircle2, AlertCircle, ArrowRight, LogOut } from 'lucide-react'
+import { getUserProfile, getAvailableProducts, logout } from '@/app/api/auth'
 
-const data = [
+interface UserProfile {
+    id: string
+    name: string
+    email: string
+    onboardingComplete: boolean
+    organization?: {
+        id: string
+        name: string
+    }
+}
+
+interface Product {
+    id: string
+    name: string
+    description: string
+    available: boolean
+}
+
+// Dummy data for testing
+const dummyUserProfile: UserProfile = {
+    id: '123',
+    name: 'John Doe',
+    email: 'john@example.com',
+    onboardingComplete: true,
+    organization: {
+        id: 'org1',
+        name: 'Acme Corp'
+    }
+}
+
+const dummyProducts: Product[] = [
     {
-        name: 'Jan',
-        total: Math.floor(Math.random() * 5000) + 1000,
+        id: '1',
+        name: 'Basic Chat',
+        description: 'Simple chat functionality for your application',
+        available: true,
     },
     {
-        name: 'Feb',
-        total: Math.floor(Math.random() * 5000) + 1000,
+        id: '2',
+        name: 'Advanced Analytics',
+        description: 'Detailed insights and analytics for your chat data',
+        available: true,
     },
     {
-        name: 'Mar',
-        total: Math.floor(Math.random() * 5000) + 1000,
+        id: '3',
+        name: 'AI Chatbot',
+        description: 'Intelligent chatbot powered by advanced AI',
+        available: false,
     },
     {
-        name: 'Apr',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'May',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Jun',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Jul',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Aug',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Sep',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Oct',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Nov',
-        total: Math.floor(Math.random() * 5000) + 1000,
-    },
-    {
-        name: 'Dec',
-        total: Math.floor(Math.random() * 5000) + 1000,
+        id: '4',
+        name: 'Multi-language Support',
+        description: 'Add multiple language capabilities to your chat',
+        available: true,
     },
 ]
 
-const agentPerformanceData = [
-    { name: 'Agent A', performance: 85 },
-    { name: 'Agent B', performance: 72 },
-    { name: 'Agent C', performance: 90 },
-    { name: 'Agent D', performance: 68 },
-    { name: 'Agent E', performance: 95 },
-]
+export default function Dashboard() {
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+    const [products, setProducts] = useState<Product[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
 
-export default function DashboardPage() {
-    const [selectedTimeRange, setSelectedTimeRange] = useState('7d')
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [profileData, productsData] = await Promise.all([
+                    getUserProfile(),
+                    getAvailableProducts()
+                ])
+                setUserProfile(profileData)
+                setProducts(productsData)
+            } catch (err) {
+                console.error('Error fetching data:', err)
+                // Use dummy data if API calls fail
+                setUserProfile(dummyUserProfile)
+                setProducts(dummyProducts)
+                setError('Failed to load real user data. Using dummy data for testing.')
+            } finally {
+                setLoading(false)
+            }
+        }
 
-    return (
-        <main  className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">18,549</div>
-                        <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Unread Messages</CardTitle>
-                        <MessageCircle className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">423</div>
-                        <p className="text-xs text-muted-foreground">+180 since last hour</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Open Tickets</CardTitle>
-                        <Ticket className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">129</div>
-                        <p className="text-xs text-muted-foreground">+19% from last week</p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Pending Broadcasts</CardTitle>
-                        <Radio className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">9</div>
-                        <p className="text-xs text-muted-foreground">3 require immediate review</p>
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Total Revenue
-                        </CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">$45,231.89</div>
-                        <p className="text-xs text-muted-foreground">
-                            +20.1% from last month
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Active Users
-                        </CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">+2350</div>
-                        <p className="text-xs text-muted-foreground">
-                            +180.1% from last month
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Conversations</CardTitle>
-                        <MessageSquare className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">+12,234</div>
-                        <p className="text-xs text-muted-foreground">
-                            +19% from last month
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">
-                            Customer Satisfaction
-                        </CardTitle>
-                        <BarChart3 className="h-4 w-4 text-muted-foreground"/>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">95.5%</div>
-                        <p className="text-xs text-muted-foreground">
-                            +5.5% from last month
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
-                    <CardHeader>
-                        <CardTitle>Overview</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-2">
-                        <Overview/>
-                    </CardContent>
-                </Card>
-                <Card className="col-span-3">
-                    <CardHeader>
-                        <CardTitle>Agent Performance</CardTitle>
-                        <CardDescription>
-                            Top performing agents this month
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <AgentPerformance/>
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
-                    <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <CardTitle>Recent Conversations</CardTitle>
-                            <Select
-                                value={selectedTimeRange}
-                                onValueChange={setSelectedTimeRange}
-                            >
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Select a timeframe"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="24h">Last 24 hours</SelectItem>
-                                    <SelectItem value="7d">Last 7 days</SelectItem>
-                                    <SelectItem value="30d">Last 30 days</SelectItem>
-                                    <SelectItem value="90d">Last 90 days</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <RecentConversations timeRange={selectedTimeRange}/>
-                    </CardContent>
-                </Card>
-                <Card className="col-span-3">
-                    <CardHeader>
-                        <CardTitle>Customer Feedback</CardTitle>
-                        <CardDescription>
-                            Recent customer satisfaction ratings
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <CustomerFeedback/>
-                    </CardContent>
-                </Card>
-            </div>
+        fetchData()
+    }, [])
 
-        </main>
-    )
-}
+    const handleOnboarding = () => {
+        router.push('/onboarding')
+    }
 
-function Overview() {
-    return (
-        <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={data}>
-                <XAxis
-                    dataKey="name"
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                />
-                <YAxis
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `$${value}`}
-                />
-                <Tooltip/>
-                <Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]}/>
-            </BarChart>
-        </ResponsiveContainer>
-    )
-}
+    const handleProductSelect = (productId: string) => {
+        router.push(`/products/${productId}`)
+    }
 
-function AgentPerformance() {
-    return (
-        <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={agentPerformanceData} layout="vertical">
-                <XAxis type="number" domain={[0, 100]}/>
-                <YAxis dataKey="name" type="category" width={100}/>
-                <Tooltip/>
-                <Bar dataKey="performance" fill="#adfa1d" radius={[0, 4, 4, 0]}/>
-            </BarChart>
-        </ResponsiveContainer>
-    )
-}
+    const handleLogout = async () => {
+        try {
+            await logout()
+            router.push('/signin')
+        } catch (error) {
+            console.error('Logout failed:', error)
+            setError('Logout failed. Please try again.')
+        }
+    }
 
-function RecentConversations({timeRange}) {
-    // This is a placeholder. In a real application, you would fetch this data based on the selected time range.
-    const conversationData = [
-        {id: 1, customer: 'Alice', agent: 'John', duration: '5m 23s', satisfaction: 4.5},
-        {id: 2, customer: 'Bob', agent: 'Sarah', duration: '3m 12s', satisfaction: 5},
-        {id: 3, customer: 'Charlie', agent: 'Mike', duration: '8m 56s', satisfaction: 3.5},
-        {id: 4, customer: 'Diana', agent: 'Emily', duration: '2m 34s', satisfaction: 4},
-        {id: 5, customer: 'Ethan', agent: 'Lisa', duration: '6m 45s', satisfaction: 4.5},
-    ]
-
-    return (
-        <div className="space-y-8">
-            {conversationData.map((conversation) => (
-                <div key={conversation.id} className="flex items-center">
-                    <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                            {conversation.customer} with {conversation.agent}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            Duration: {conversation.duration}
-                        </p>
-                    </div>
-                    <div className="ml-auto font-medium">
-                        Rating: {conversation.satisfaction}
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-500 p-4">
+                <div className="container mx-auto space-y-4">
+                    <Skeleton className="h-12 w-3/4 bg-white/20" />
+                    <Skeleton className="h-4 w-1/2 bg-white/20" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {[...Array(3)].map((_, index) => (
+                            <Skeleton key={index} className="h-40 bg-white/20" />
+                        ))}
                     </div>
                 </div>
-            ))}
-        </div>
-    )
-}
-
-function CustomerFeedback() {
-    const feedbackData = [
-        { date: '2023-01', satisfaction: 4.2 },
-        { date: '2023-02', satisfaction: 4.3 },
-        { date: '2023-03', satisfaction: 4.1 },
-        { date: '2023-04', satisfaction: 4.4 },
-        { date: '2023-05', satisfaction: 4.6 },
-        { date: '2023-06', satisfaction: 4.5 },
-    ]
+            </div>
+        )
+    }
 
     return (
-        <ResponsiveContainer width="100%" height={350}>
-            <LineChart data={feedbackData}>
-                <XAxis dataKey="date" />
-                <YAxis domain={[3, 5]} />
-                <Tooltip />
-                <Line type="monotone" dataKey="satisfaction" stroke="#adfa1d" strokeWidth={2} />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className="min-h-screen bg-gradient-to-br from-purple-500 to-blue-500 p-4">
+            <div className="container mx-auto space-y-6">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white">Welcome, {userProfile?.name}!</h1>
+                        {userProfile?.organization && (
+                            <p className="text-xl text-white/80">Organization: {userProfile.organization.name}</p>
+                        )}
+                    </div>
+                    <Button onClick={handleLogout} variant="outline" className="bg-white/10 text-white hover:bg-white/20">
+                        <LogOut className="mr-2 h-4 w-4" /> Logout
+                    </Button>
+                </div>
+
+                {/*{error && (
+                    <Alert variant="destructive" className="bg-red-100 border-red-400">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}*/}
+
+                {!userProfile?.onboardingComplete && (
+                    <Alert className="bg-white/80 border-none">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Onboarding Required</AlertTitle>
+                        <AlertDescription>
+                            Please complete your profile to access all features.
+                            <Button onClick={handleOnboarding} variant="link" className="p-0 h-auto font-normal">
+                                Start Onboarding <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {products.map((product) => (
+                        <Card key={product.id} className="bg-white/90 backdrop-blur-sm">
+                            <CardHeader>
+                                <CardTitle>{product.name}</CardTitle>
+                                <CardDescription>{product.description}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {product.available ? (
+                                    <Button onClick={() => handleProductSelect(product.id)} className="w-full bg-purple-600 hover:bg-purple-700">
+                                        Select <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
+                                ) : (
+                                    <Button disabled className="w-full">
+                                        Not Available
+                                    </Button>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                {userProfile?.onboardingComplete && products.length === 0 && (
+                    <Alert className="bg-white/80 border-none">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>No Products Available</AlertTitle>
+                        <AlertDescription>
+                            There are currently no products available for your account. Please contact support for assistance.
+                        </AlertDescription>
+                    </Alert>
+                )}
+            </div>
+        </div>
     )
 }

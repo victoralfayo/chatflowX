@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, Fragment } from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MessageSquareIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
+import { ZapIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,12 +15,12 @@ import {
     InputOTPGroup,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
+import {loginWithPassword, sendOTP, verifyOTP} from "@/app/api/auth";
 
 const countryCodes = [
     { code: '+1', country: 'US' },
     { code: '+44', country: 'UK' },
     { code: '+91', country: 'IN' },
-    // Add more country codes as needed
 ]
 
 export default function SignIn() {
@@ -53,38 +53,51 @@ export default function SignIn() {
 
     const handleSendOtp = async () => {
         if (validateForm()) {
-            // Simulating OTP send
-            setOtpSent(true)
-            setOtp('') // Reset OTP when sending a new one
-            // In a real app, you would call an API to send the OTP
-            console.log('OTP sent to', countryCode + phoneNumber)
+            setSubmitStatus('loading')
+            try {
+                await sendOTP(countryCode + phoneNumber)
+                setOtpSent(true)
+                setOtp('')
+                setSubmitStatus('idle')
+            } catch (error) {
+                setSubmitStatus('error')
+                setErrors({ ...errors, otp: error instanceof Error ? error.message : 'Failed to send OTP. Please try again.' })
+            }
         }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!validateForm()) return
-        if (loginMethod === 'otp') {
-            if (!otpSent) {
-                setErrors({ ...errors, otp: 'Please send and verify OTP first' })
-                return
-            }
-            if (otp.length !== 6) {
-                setErrors({ ...errors, otp: 'OTP must be 6 digits' })
-                return
-            }
-        }
 
         setSubmitStatus('loading')
 
-        // Simulating an API call
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            let result;
+            if (loginMethod === 'password') {
+                result = await loginWithPassword(email, password)
+            } else {
+                if (!otpSent) {
+                    setErrors({...errors, otp: 'Please send and verify OTP first'})
+                    setSubmitStatus('idle')
+                    return
+                }
+                result = await verifyOTP(countryCode + phoneNumber, otp)
+            }
+
             setSubmitStatus('success')
+            // Assuming the API returns a token or user data
+            // You might want to store this in a global state or context
+            console.log('Login successful:', result)
+
             // Redirect to the dashboard after a short delay
             setTimeout(() => router.push('/dashboard'), 1500)
         } catch (error) {
             setSubmitStatus('error')
+            setErrors({
+                ...errors,
+                form: error instanceof Error ? error.message : 'Invalid credentials. Please try again.'
+            })
         }
     }
 
@@ -93,7 +106,7 @@ export default function SignIn() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-400 to-blue-500">
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
             <header className="w-full p-4">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors">
                     <ArrowLeftIcon className="inline-block mr-2" /> Back to Home
@@ -103,8 +116,8 @@ export default function SignIn() {
                 <Card className="w-full max-w-md">
                     <CardHeader>
                         <CardTitle className="flex items-center justify-center text-2xl font-bold">
-                            <MessageSquareIcon className="h-6 w-6 mr-2 text-green-500" />
-                            Sign In to ChatCRM
+                            <ZapIcon className="h-6 w-6 mr-2 text-purple-500" />
+                            Sign In to Chatflow
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -118,7 +131,7 @@ export default function SignIn() {
                         {submitStatus === 'success' && (
                             <Alert className="mb-4">
                                 <AlertDescription>
-                                    Sign in successful! Redirecting...
+                                    Sign in successful! Redirecting to dashboard...
                                 </AlertDescription>
                             </Alert>
                         )}
@@ -213,7 +226,7 @@ export default function SignIn() {
                                     <Button
                                         type="button"
                                         onClick={handleSendOtp}
-                                        className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                                     >
                                         {otpSent ? 'Resend OTP' : 'Send OTP'}
                                     </Button>
@@ -230,7 +243,7 @@ export default function SignIn() {
                                                         <InputOTPSlot
                                                             key={index}
                                                             index={index}
-                                                            className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200"
+                                                            className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200"
                                                         />
                                                     ))}
                                                 </InputOTPGroup>
@@ -242,7 +255,7 @@ export default function SignIn() {
                             )}
                             <Button
                                 type="submit"
-                                className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                                 disabled={submitStatus === 'loading' || (loginMethod === 'otp' && (!otpSent || otp.length !== 6))}
                             >
                                 {submitStatus === 'loading' ? 'Signing In...' : 'Sign In'}
@@ -250,7 +263,7 @@ export default function SignIn() {
                         </form>
                         <p className="mt-4 text-center text-sm text-gray-600">
                             Don't have an account?{' '}
-                            <Link href="/get-started" className="text-blue-500 hover:underline">
+                            <Link href="/get-started" className="text-purple-500 hover:underline">
                                 Get Started
                             </Link>
                         </p>

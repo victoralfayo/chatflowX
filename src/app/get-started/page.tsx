@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MessageSquareIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
+import { ZapIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,12 +15,12 @@ import {
     InputOTPGroup,
     InputOTPSlot,
 } from "@/components/ui/input-otp"
+import {register, sendOTP, verifyOTP} from "@/app/api/auth";
 
 const countryCodes = [
     { code: '+1', country: 'US' },
     { code: '+44', country: 'UK' },
     { code: '+91', country: 'IN' },
-    // Add more country codes as needed
 ]
 
 export default function GetStarted() {
@@ -53,11 +53,17 @@ export default function GetStarted() {
 
     const handleSendOtp = async () => {
         if (validateForm()) {
-            setOtpSent(true)
-            setOtp('')
-            setOtpVerified(false)
-            console.log('OTP sent to', countryCode + phoneNumber)
-            console.log("OTP 123456")
+            setSubmitStatus('loading')
+            try {
+                await sendOTP(countryCode + phoneNumber)
+                setOtpSent(true)
+                setOtp('')
+                setOtpVerified(false)
+                setSubmitStatus('idle')
+            } catch (error) {
+                setSubmitStatus('error')
+                setErrors({ ...errors, otp: 'Failed to send OTP. Please try again.' })
+            }
         }
     }
 
@@ -67,12 +73,16 @@ export default function GetStarted() {
             return
         }
 
-        if (otp === '123456') {
+        setSubmitStatus('loading')
+        try {
+            await verifyOTP(countryCode + phoneNumber, otp)
             setOtpVerified(true)
             setErrors({ ...errors, otp: '' })
-        } else {
+            setSubmitStatus('idle')
+        } catch (error) {
             setOtpVerified(false)
             setErrors({ ...errors, otp: 'Invalid OTP' })
+            setSubmitStatus('idle')
         }
     }
 
@@ -87,11 +97,17 @@ export default function GetStarted() {
         setSubmitStatus('loading')
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await register({
+                name,
+                email,
+                password,
+                phoneNumber: countryCode + phoneNumber
+            })
             setSubmitStatus('success')
-            setTimeout(() => router.push('/onboarding'), 1500)
+            setTimeout(() => router.push('/dashboard'), 1500)
         } catch (error) {
             setSubmitStatus('error')
+            setErrors({ ...errors, form: 'Registration failed. Please try again.' })
         }
     }
 
@@ -100,7 +116,7 @@ export default function GetStarted() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-400 to-blue-500">
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
             <header className="w-full p-4">
                 <Link href="/" className="text-white hover:text-gray-200 transition-colors">
                     <ArrowLeftIcon className="inline-block mr-2" /> Back to Home
@@ -110,8 +126,8 @@ export default function GetStarted() {
                 <Card className="w-full max-w-fit">
                     <CardHeader>
                         <CardTitle className="flex items-center justify-center text-2xl font-bold">
-                            <MessageSquareIcon className="h-6 w-6 mr-2 text-green-500" />
-                            Get Started with ChatCRM
+                            <ZapIcon className="h-6 w-6 mr-2 text-purple-500" />
+                            Get Started with Chatflow
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -125,7 +141,7 @@ export default function GetStarted() {
                         {submitStatus === 'success' && (
                             <Alert className="mb-4">
                                 <AlertDescription>
-                                    Account created successfully! Redirecting...
+                                    Account created successfully! Redirecting to dashboard...
                                 </AlertDescription>
                             </Alert>
                         )}
@@ -207,7 +223,7 @@ export default function GetStarted() {
                             <Button
                                 type="button"
                                 onClick={handleSendOtp}
-                                className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                             >
                                 {otpSent ? 'Resend OTP' : 'Send OTP'}
                             </Button>
@@ -225,7 +241,7 @@ export default function GetStarted() {
                                                     <InputOTPSlot
                                                         key={index}
                                                         index={index}
-                                                        className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-green-600 focus:border-green-500 focus:ring focus:ring-green-200"
+                                                        className="w-10 h-12 text-center text-lg transition-all duration-200 ease-in-out transform border-purple-600 focus:border-purple-500 focus:ring focus:ring-purple-200"
                                                     />
                                                 ))}
                                             </InputOTPGroup>
@@ -234,7 +250,7 @@ export default function GetStarted() {
                                     <Button
                                         type="button"
                                         onClick={handleVerifyOtp}
-                                        className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                                         disabled={otp.length !== 6}
                                     >
                                         Verify OTP
@@ -245,7 +261,7 @@ export default function GetStarted() {
                             )}
                             <Button
                                 type="submit"
-                                className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white"
+                                className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white"
                                 disabled={submitStatus === 'loading' || !otpSent || !otpVerified}
                             >
                                 {submitStatus === 'loading' ? 'Creating Account...' : 'Create Account'}
@@ -253,7 +269,7 @@ export default function GetStarted() {
                         </form>
                         <p className="mt-4 text-center text-sm text-gray-600">
                             Already have an account?{' '}
-                            <Link href="/signin" className="text-blue-500 hover:underline">
+                            <Link href="/signin" className="text-purple-500 hover:underline">
                                 Sign In
                             </Link>
                         </p>
