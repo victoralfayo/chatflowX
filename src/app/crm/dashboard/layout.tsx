@@ -32,16 +32,15 @@ import {useState} from "react";
 
 
 const navItems = [
-
-    { href: '/crm/dashboard', label: 'Dashboard' },
-    { href: '/crm/dashboard/organization', label: 'Organization & Agents' },
-    { href: '/crm/dashboard/integrations', label: 'Integrations' },
-    { href: '/crm/dashboard/customers', label: 'Customers' },
-    { href: '/crm/dashboard/chats', label: 'Chats' },
-    { href: '/crm/dashboard/tickets', label: 'Tickets' },
-    { href: '/crm/dashboard/menu-apps', label: 'Menu Apps' },
-    { href: '/crm/dashboard/templates', label: 'Templates' },
-    { href: '/crm/dashboard/schedules', label: 'Schedules' },
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/dashboard/organization', label: 'Organization & Agents' },
+    { href: '/dashboard/integrations', label: 'Integrations' },
+    { href: '/dashboard/customers', label: 'Customers' },
+    { href: '/dashboard/chats', label: 'Chats' },
+    { href: '/dashboard/tickets', label: 'Tickets' },
+    { href: '/dashboard/menu-apps', label: 'Menu Apps' },
+    { href: '/dashboard/templates', label: 'Templates' },
+    { href: '/dashboard/schedules', label: 'Schedules' },
 ]
 
 function Header() {
@@ -112,8 +111,8 @@ function Header() {
                             </SheetTrigger>
                             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                                 <nav className="flex flex-col space-y-4 mt-4">
-                                    {navItems.map((item, index) => (
-                                        <Link key={index} href={item.href}>
+                                    {navItems.map((item) => (
+                                        <Link key={item.href} href={item.href}>
                                             <Button
                                                 variant="ghost"
                                                 className="w-full justify-start"
