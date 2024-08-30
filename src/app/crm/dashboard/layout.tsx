@@ -32,7 +32,7 @@ import {useState} from "react";
 
 
 const navItems = [
-    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/crm/dashboard', label: 'Dashboard' },
     { href: '/dashboard/organization', label: 'Organization & Agents' },
     { href: '/dashboard/integrations', label: 'Integrations' },
     { href: '/dashboard/customers', label: 'Customers' },
