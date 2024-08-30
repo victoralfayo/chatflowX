@@ -32,15 +32,15 @@ import {useState} from "react";
 
 
 const navItems = [
-    { href: 'crm/dashboard', label: 'Dashboard' },
-    { href: 'crm/dashboard/organization', label: 'Organization & Agents' },
-    { href: 'crm/dashboard/integrations', label: 'Integrations' },
-    { href: 'crm/dashboard/customers', label: 'Customers' },
-    { href: 'crm/dashboard/chats', label: 'Chats' },
-    { href: 'crm/dashboard/tickets', label: 'Tickets' },
-    { href: 'crm/dashboard/menu-apps', label: 'Menu Apps' },
-    { href: 'crm/dashboard/templates', label: 'Templates' },
-    { href: 'crm/dashboard/schedules', label: 'Schedules' },
+    { href: 'automations/dashboard', label: 'Dashboard' },
+    { href: 'automations/dashboard/organization', label: 'Organization & Agents' },
+    { href: 'automations/dashboard/integrations', label: 'Integrations' },
+    { href: 'automations/dashboard/customers', label: 'Customers' },
+    { href: 'automations/dashboard/chats', label: 'Chats' },
+    { href: 'automations/dashboard/tickets', label: 'Tickets' },
+    { href: 'automations/dashboard/menu-apps', label: 'Menu Apps' },
+    { href: 'automations/dashboard/templates', label: 'Templates' },
+    { href: 'automations/dashboard/schedules', label: 'Schedules' },
 ]
 
 function Header() {
