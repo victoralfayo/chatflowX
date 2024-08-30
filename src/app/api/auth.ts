@@ -84,6 +84,30 @@ export async function getAvailableProducts() {
     }
 }
 
+export async function getStats() {
+    try {
+        const response = await api.get('/stats');
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Failed to fetch stats');
+        }
+        throw error;
+    }
+}
+
+export async function getNotifications() {
+    try {
+        const response = await api.get('/notifications');
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Failed to fetch notifications');
+        }
+        throw error;
+    }
+}
+
 export async function logout() {
     try {
         const response = await api.post('/logout');
