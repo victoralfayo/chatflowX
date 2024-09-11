@@ -143,7 +143,7 @@ export default function CustomersDashboard() {
                                     <PlusIcon className="mr-2 h-4 w-4" />
                                     Add Group
                                 </ButtonSubmit>
-                            </DialogTrigger>x
+                            </DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle className={"text-jade-950"}>Add New Group</DialogTitle>
